@@ -22,3 +22,6 @@ zuul:
     rest2:
       path: /rest2/**
       serviceId: rest2-server
+    accounts:
+      path: /accounts/**
+      serviceId: account-service  
