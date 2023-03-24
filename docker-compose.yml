@@ -1,6 +1,38 @@
 version: '3.2'
 
 services:
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - '9092:9092'
+      - '29094:29094'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=EXTERNAL://0.0.0.0:9092,INTERNAL://kafka:29094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=EXTERNAL://127.0.0.1:9092,INTERNAL://kafka:29094
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ADVERTISED_HOST_NAME=host.docker.internal 
+    depends_on:
+      - zookeeper
+      - eureka-server
+      
+  account-processor:
+    build: ./account-processor 
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka     
+    depends_on:
+      - kafka
+      - zuul-server
+      
   eureka-server:
     build: ./eureka-server
     ports:
@@ -13,8 +45,8 @@ services:
     depends_on:
       - eureka-server
     environment:
-      eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka
-      
+      eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka     
+
   account-service:
     build: ./account-service
     ports:
@@ -22,6 +54,7 @@ services:
     depends_on:
       - eureka-server
       - zuul-server
+      - kafka
     environment:
       eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka     
 

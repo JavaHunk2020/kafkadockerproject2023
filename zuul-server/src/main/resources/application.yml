@@ -24,4 +24,4 @@ zuul:
       serviceId: rest2-server
     accounts:
       path: /accounts/**
-      serviceId: account-service  
+      serviceId: account-service
