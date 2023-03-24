@@ -15,7 +15,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 @Configuration
 public class KafkaConfiguration {
 	
-	@Value(value = "${kafka.bootstrapAddress:pykube02}")
+	@Value(value = "${kafka.bootstrapAddress:kafka:29094}")
     private String bootstrapAddress;
 
    @Bean
