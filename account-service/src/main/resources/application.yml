@@ -4,8 +4,31 @@ server:
 spring:
   application:
     name: account-service
+  zipkin:
+    base-url: ${ZIPKIN_URL:http://zipkin:9411}/
+
 bootstrap:
    servers: kafka:29094    
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 
+         - "prometheus"
+         - "health"  
+         - "info"
+
+# HEALTH ENDPOINT
+# enable a detailed view
+#http://localhost:port/actuator/health
+  endpoint:
+     health:
+       show-details: always
+
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 eureka:
   client:

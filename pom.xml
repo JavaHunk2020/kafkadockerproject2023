@@ -17,6 +17,8 @@
         <module>account-service</module>
         <module>account-processor</module>
         <module>config-server</module>
+        <module>prometheus</module>
+        <module>zipkin-service</module>
     </modules>
 
 </project>

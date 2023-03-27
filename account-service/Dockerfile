@@ -8,7 +8,7 @@ WORKDIR  /microservices
 
 COPY . /microservices
 
-RUN mvn clean install -DskipTests
+RUN mvn clean package -DskipTests
 
 LABEL maintainer="technohunk444@gmail.com"
 

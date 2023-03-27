@@ -1,0 +1,17 @@
+{
+	"ulid": "01GWEJAVB4W257FWD649ZR0A91",
+	"minTime": 1679810400000,
+	"maxTime": 1679817600000,
+	"stats": {
+		"numSamples": 274763,
+		"numSeries": 925,
+		"numChunks": 1993
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01GWEJAVB4W257FWD649ZR0A91"
+		]
+	},
+	"version": 1
+}

@@ -5,6 +5,9 @@ spring:
   application:
     name: zuul-server
 
+  zipkin:
+    base-url: ${ZIPKIN_URL:http://zipkin:9411}/
+
 eureka:
   client:
     serviceUrl:
