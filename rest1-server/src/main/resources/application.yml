@@ -4,7 +4,10 @@ server:
 spring:
   application:
     name: rest1-server
-
+    zipkin:
+      enabled: true    
+    zipkin:
+      base-url: ${ZIPKIN_URL:http://zipkin:9411}/
 eureka:
   client:
     serviceUrl:

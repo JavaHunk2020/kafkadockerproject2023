@@ -5,6 +5,7 @@ spring:
   application:
     name: account-service
   zipkin:
+    enabled: true
     base-url: ${ZIPKIN_URL:http://zipkin:9411}/
 
 bootstrap:

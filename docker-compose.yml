@@ -3,7 +3,8 @@ version: '3.2'
 services:
 
   zipkin:
-    build: ./account-processor 
+    image: openzipkin/zipkin
+    container_name: service-zipkin
     ports:
       - 9411:9411
 
@@ -75,6 +76,7 @@ services:
     depends_on:
       - eureka-server
       - zuul-server
+      - zipkin 
     environment:
       eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka
 
@@ -86,6 +88,7 @@ services:
     depends_on:
       - eureka-server
       - zuul-server
+      - zipkin
     environment:
       eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka
 

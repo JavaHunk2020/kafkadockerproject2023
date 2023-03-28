@@ -1,9 +1,13 @@
 server:
-  port: 9002
+  port: 9005
 
 spring:
   application:
     name: rest2-server
+    
+  zipkin:
+      enabled: true
+      base-url: ${ZIPKIN_URL:http://localhost:9411}/       
 
 eureka:
   client:
