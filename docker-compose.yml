@@ -3,8 +3,7 @@ version: '3.2'
 services:
 
   zipkin:
-    image: openzipkin/zipkin
-    container_name: service-zipkin
+    build: ./account-processor 
     ports:
       - 9411:9411
 
