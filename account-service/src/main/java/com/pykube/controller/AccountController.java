@@ -22,6 +22,10 @@ public class AccountController {
 	private KafkaTemplate<String,String> kafkaTemplate;
 	
 	
+	@Autowired
+	private KafkaTemplate<String,UserDTO> ukafkaTemplate;
+	
+	
 	@PostConstruct
 	public void into() {
 		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -32,6 +36,16 @@ public class AccountController {
 		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		
+	}
+	
+	@PostMapping("/user")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public String createUser(@RequestBody UserDTO userDTO) {
+		System.out.println("Post method is called to  create = "+userDTO);
+		System.out.println("Prometheus monitoring is on................");
+		ukafkaTemplate.send("pykube03",userDTO);
+		System.out.println("Message is published successfully "+userDTO);
+		return "created";
 	}
 	
 	@PostMapping("/")

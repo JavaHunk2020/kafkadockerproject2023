@@ -2,6 +2,59 @@ version: '3.2'
 
 services:
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    container_name: service-elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - node.name=elasticsearch
+      - cluster.name=es-docker-cluster
+      #- cluster.initial_master_nodes=elasticsearch
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+#    mem_limit: 500m
+#    cap_add:
+#      - IPC_LOCK
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data:rw
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.8.0
+    container_name: service-kibana
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.8.0
+    container_name: service-logstash
+    restart: unless-stopped
+    command: logstash -f /usr/share/logstash/pipeline
+    volumes:
+      - ./logstash/config:/usr/share/logstash/config:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5000:5000"
+      - "12204:12204"
+    depends_on:
+      - elasticsearch
+
   zipkin:
     image: openzipkin/zipkin
     container_name: service-zipkin
@@ -40,6 +93,7 @@ services:
       - kafka
       - zuul-server
       - zipkin
+      - logstash
       
   eureka-server:
     build: ./eureka-server
@@ -66,6 +120,7 @@ services:
       - zuul-server
       - kafka
       - zipkin
+      - logstash
     environment:
       eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka     
 
@@ -77,6 +132,7 @@ services:
       - eureka-server
       - zuul-server
       - zipkin 
+      - logstash
     environment:
       eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka
 
@@ -89,6 +145,7 @@ services:
       - eureka-server
       - zuul-server
       - zipkin
+      - logstash
     environment:
       eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka
 
